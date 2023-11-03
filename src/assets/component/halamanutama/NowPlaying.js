@@ -1,19 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
-import { useMovieDataQuery } from "../../services/get-data-movie";
+import { fetchDataMovie, useMovieDataQuery } from "../../../services/movie/get-data-movie";
+import { CookieKeys, CookieStorage } from "../../../utils/Cookies";
+import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getDataPopularAll } from "../../../redux/action/moviePupolar";
 
 const NowPlaying = () => {
-  const { data } = useMovieDataQuery({
-    languange: "en-us",
-    page: "PageNow",
-  });
-  const movie = data ? data.results : [];
+  // const token = CookieStorage.get(CookieKeys.AuthToken);
+  // const [data, setdata] = useState([]);
+  // console.log(data);
+
+  // const { data } = useMovieDataQuery({
+  //   languange: "en-us",
+  //   page: "PageNow",
+  // });
+  // const movie = data ? data.results : [];
+
+  // const getmovie = async () => {
+  //   const datapopular = await fetchDataMovie(token);
+  //   setdata(datapopular.data);
+  // };
+
+  // useEffect(() => {
+  //   if (token) {
+  //     getmovie();
+  //   }
+  //   // else {
+  //   //   Navigate("/");
+  //   // }
+  // }, [token]);
+  const dispatch = useDispatch();
+
+  const getpopulatmovies = () => {
+    dispatch(getDataPopularAll());
+  };
+  useEffect(() => {
+    getpopulatmovies();
+  }, []);
+
+  const movies = useSelector((state) => state.movie.movies);
 
   return (
     <div>
+      {/* {data.map((film) => (
+        <p key={film.id}>{film.title}</p>
+      ))} */}
       <Swiper
         autoplay={{
           delay: 3000,
@@ -25,9 +60,9 @@ const NowPlaying = () => {
         modules={[Pagination, Autoplay]}
         className="mySwiper"
       >
-        {movie.map((film) => (
+        {movies.map((film) => (
           <SwiperSlide key={film.id}>
-            <div className="w-full h-[52rem] relative">
+            <div className="w-full h-screen relative">
               <img className="w-full h-full bg-cover opacity-50 " src={`https://image.tmdb.org/t/p/original/${film.backdrop_path}`}></img>
               <div className="absolute top-0 w-[50%] h-full flex flex-col justify-center gap-4 pl-10 text-white">
                 <h1 className="text-5xl font-bold ">{film.title}</h1>
@@ -40,6 +75,7 @@ const NowPlaying = () => {
                 </button>
               </div>
             </div>
+            //{" "}
           </SwiperSlide>
         ))}
       </Swiper>

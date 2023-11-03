@@ -5,12 +5,16 @@ import { CookieKeys, CookieStorage } from "../../utils/Cookies";
 import http3 from "../../utils/http3";
 import { toast } from "react-toastify";
 
+export const reduxLoginUser = async (input) => {
+  return await http3.post(API_ENDPOINT.LOGIN_USER, input);
+};
+
 const LoginUser = async (input) => {
   return await http3
     .post(API_ENDPOINT.LOGIN_USER, input)
     .then((result) => {
       CookieStorage.set(CookieKeys.AuthToken, result.data.data.token);
-      console.log(result.data.data.token);
+      // console.log(result.data.data.token);
       return result;
     })
     .catch((err) => {

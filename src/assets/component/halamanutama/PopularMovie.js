@@ -1,16 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { useMovieDataQuery } from "../../services/get-data-movie";
+
 import { Link } from "react-router-dom";
+import { useMovieDataPopularQuery } from "../../../services/movie/get-data-movie-popular";
+import { CookieKeys, CookieStorage } from "../../../utils/Cookies";
+import { fetchDataMovie } from "../../../services/movie/get-data-movie";
+import { useDispatch, useSelector } from "react-redux";
+import { getDataPopularAll } from "../../../redux/action/moviePupolar";
 
 export const PopularMovie = () => {
-  const { data } = useMovieDataQuery({
-    languange: "en-us",
-    page: "PageNow",
-  });
+  const dispatch = useDispatch();
 
-  const movie = data ? data.results : [];
+  const getpopulatmovies = () => {
+    dispatch(getDataPopularAll());
+  };
+  useEffect(() => {
+    getpopulatmovies();
+  }, []);
+
+  const movies = useSelector((state) => state.movie.movies);
+  // console.log(movies, "popularmovie");
+
+  // const token = CookieStorage.get(CookieKeys.AuthToken);
+  // const [data, setdata] = useState([]);
+
+  // const getmovie = async () => {
+  //   const datapopular = await fetchDataMovie(token);
+  //   setdata(datapopular.data);
+  // };
+
+  // useEffect(() => {
+  //   if (token) {
+  //     getmovie();
+  //   }
+  // }, [token]);
+
+  // const { data } = useMovieDataPopularQuery({
+  //   languange: "en-us",
+  //   page: "PageNow",
+  // });
+
+  // const movie = data ? data.results : [];
 
   return (
     <div className="h-full mt-10">
@@ -25,7 +56,7 @@ export const PopularMovie = () => {
       </div>
       <div>
         <Swiper spaceBetween={50} slidesPerView={4} onSlideChange={() => console.log("slide change")} onSwiper={(swiper) => console.log(swiper)}>
-          {movie.map((film) => (
+          {movies.map((film) => (
             <SwiperSlide>
               <Link to={`/detail/${film.id}`}>
                 <img className="px-4 rounded-[1.5rem] transition-transform transform hover:scale-105" src={`https://image.tmdb.org/t/p/original/${film.poster_path}`} alt={film.title}></img>

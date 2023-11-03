@@ -7,7 +7,11 @@ const Search = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    navigate(`/${search}`);
+    if (search) {
+      navigate(`/searchresult/${search}`);
+    } else {
+      navigate("/halaman");
+    }
   }
   return (
     <form className="relative flex items-center w-1/2 " onSubmit={handleSubmit}>

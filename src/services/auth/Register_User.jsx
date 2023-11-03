@@ -5,6 +5,10 @@ import http2 from "../../utils/http2";
 import http from "../../utils/http";
 import { toast } from "react-toastify";
 
+export const reduxRegisterUser = async (input) => {
+  return await http3.post(API_ENDPOINT.REGISTER_USER, input);
+};
+
 const RegisterUser = async (input) => {
   try {
     await http3.post(API_ENDPOINT.REGISTER_USER, input);

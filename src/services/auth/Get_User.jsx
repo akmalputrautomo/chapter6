@@ -8,6 +8,14 @@ import { CookieKeys } from "../../utils/Cookies";
 import Cookies from "universal-cookie";
 import { Navigate } from "react-router-dom";
 
+export const GetUser = async () => {
+  return await http3.get(API_ENDPOINT.GET_USER);
+};
+
+const useGetDataUser = (options) => {
+  return useQuery([API_ENDPOINT.GET_USER, options], fetchUserData);
+};
+
 const fetchUserData = async ({ queryKey }) => {
   const [_key] = queryKey;
   const { data } = await http3
@@ -20,15 +28,10 @@ const fetchUserData = async ({ queryKey }) => {
       // return { data: DataHasil };
     })
     .catch((err) => {
-      if (err.response.status === 401) {
-        window.location.href = "/";
-        // alert("eror");
-      }
+      // if (err.response.status === 401) {
+      //   window.location.href = "/";
+      // }
     });
   return data;
-};
-
-const useGetDataUser = (options) => {
-  return useQuery([API_ENDPOINT.GET_USER, options], fetchUserData);
 };
 export { fetchUserData, useGetDataUser };
