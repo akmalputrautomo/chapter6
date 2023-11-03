@@ -3,8 +3,14 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { CookieKeys, CookieStorage } from "../../../utils/Cookies";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../../redux/reducers/auth/authlogin";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function GoogleLogin() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const registerLoginWithGoogleAction = async (accessToken) => {
     try {
       let data = JSON.stringify({
@@ -26,9 +32,11 @@ function GoogleLogin() {
 
       // Simpan token ke dalam cookies
       CookieStorage.set(CookieKeys.AuthToken, token);
+      dispatch(setToken(token));
       toast.success("Login Berhasil!");
       setTimeout(() => {
-        window.location.href = "/halaman";
+        // window.location.href = "/halaman";
+        navigate("/halaman");
       }, 2000);
     } catch (error) {
       if (axios.isAxiosError(error)) {
